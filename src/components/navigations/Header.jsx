@@ -13,7 +13,7 @@ export default function HeaderWrapper() {
     "/staff/leave-request": "Leave Requests",
     "/staff-payroll": "Staff Payroll",
     "/file-leave": "File Leave",
-    "/profile": "My Profile",
+    "/staff/profile": "Profile",
   };
 
   const title = routeTitles[location.pathname] || "Untitled";

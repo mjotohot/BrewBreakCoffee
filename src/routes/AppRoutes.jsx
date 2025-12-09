@@ -8,7 +8,8 @@ import Register from "../pages/auth/Register.jsx";
 import Dashboard from "../pages/staff/Dashboard.jsx";
 import AdminDashboard from "../pages/admin/AdminDashboard.jsx";
 import Notification from "../components/commons/Notification.jsx";
-import FileLeave from "../pages/staff/FileLeave.jsx";3
+import FileLeave from "../pages/staff/FileLeave.jsx";
+import Profile from "../pages/staff/Profile.jsx";
 import StaffPayroll from "../pages/admin/StaffPayroll.jsx";
 
 export default function AppRoutes() {
@@ -29,6 +30,7 @@ export default function AppRoutes() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="notification" element={<Notification />} />
           <Route path="leave-request" element={<FileLeave />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Route>
 

@@ -7,14 +7,26 @@ import { useState, useEffect } from "react";
 import { employeesList } from "../../services/auth";
 import { getMonthlyAttendance } from "../../services/attendanceService";
 
-const DAILY_RATE = 500; 
+const DAILY_RATE = 500;
 // Generate avatar colors
-const avatarColors = ["#E91E63", "#9C27B0", "#2196F3", "#FF9800", "#4CAF50", "#F44336", "#00BCD4", "#FFC107"];
+const avatarColors = [
+  "#E91E63",
+  "#9C27B0",
+  "#2196F3",
+  "#FF9800",
+  "#4CAF50",
+  "#F44336",
+  "#00BCD4",
+  "#FFC107",
+];
 
 const getInitials = (name) => {
-  if (!name || typeof name !== 'string') return '??';
-  const names = name.trim().split(' ').filter(n => n.length > 0);
-  if (names.length === 0) return '??';
+  if (!name || typeof name !== "string") return "??";
+  const names = name
+    .trim()
+    .split(" ")
+    .filter((n) => n.length > 0);
+  if (names.length === 0) return "??";
   if (names.length === 1) {
     return names[0].substring(0, 2).toUpperCase();
   }
@@ -36,9 +48,9 @@ const calculateAttendanceStats = (attendanceRecords) => {
 
   attendanceRecords.forEach((record) => {
     if (record.check_in && record.check_out) {
-      const checkInTime = moment(record.check_in, 'HH:mm:ss');
-      const cutoffTime = moment('08:00:00', 'HH:mm:ss');
-      
+      const checkInTime = moment(record.check_in, "HH:mm:ss");
+      const cutoffTime = moment("08:00:00", "HH:mm:ss");
+
       if (checkInTime.isAfter(cutoffTime)) {
         late++;
       }
@@ -55,7 +67,9 @@ export default function StaffPayroll() {
   const [employees, setEmployees] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedMonth, setSelectedMonth] = useState(moment().format("YYYY-MM"));
+  const [selectedMonth, setSelectedMonth] = useState(
+    moment().format("YYYY-MM")
+  );
   const [totalStaff, setTotalStaff] = useState(0);
   const [totalPayroll, setTotalPayroll] = useState(0);
 
@@ -68,7 +82,7 @@ export default function StaffPayroll() {
     try {
       const [employeesData, attendanceData] = await Promise.all([
         employeesList(),
-        getMonthlyAttendance(selectedMonth)
+        getMonthlyAttendance(selectedMonth),
       ]);
 
       const attendanceByUser = {};
@@ -87,8 +101,8 @@ export default function StaffPayroll() {
 
         return {
           id: employee.id,
-          name: employee.name || 'Unknown',
-          email: employee.email || '',
+          name: employee.name || "Unknown",
+          email: employee.email || "",
           salary: salary,
           present: stats.present,
           absent: stats.absent,
@@ -99,7 +113,7 @@ export default function StaffPayroll() {
       setEmployees(mergedData);
       setAttendanceData(attendanceData);
       setTotalStaff(employeesData.length);
-      
+
       const payrollSum = mergedData.reduce((sum, emp) => sum + emp.salary, 0);
       setTotalPayroll(payrollSum.toFixed(2));
     } catch (error) {
@@ -115,7 +129,7 @@ export default function StaffPayroll() {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 min-h-screen">
       {/* Month Selector */}
       <div className="mb-6 flex items-center gap-4">
         <label className="text-lg font-semibold">Select Month:</label>
@@ -130,8 +144,18 @@ export default function StaffPayroll() {
       {/* CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5 tracking-widest mb-8">
         {[
-          { id: 1, count: totalStaff.toString(), icon: FaCircleCheck, detail: "TOTAL STAFF" },
-          { id: 2, count: `₱${totalPayroll}`, icon: FaTimesCircle, detail: "TOTAL PAYROLL" },
+          {
+            id: 1,
+            count: totalStaff.toString(),
+            icon: FaCircleCheck,
+            detail: "TOTAL STAFF",
+          },
+          {
+            id: 2,
+            count: `₱${totalPayroll}`,
+            icon: FaTimesCircle,
+            detail: "TOTAL PAYROLL",
+          },
         ].map((c) => (
           <Cards key={c.id} count={c.count} detail={c.detail} icon={c.icon} />
         ))}
@@ -150,7 +174,7 @@ export default function StaffPayroll() {
           {employees.map((employee, index) => (
             <div
               key={employee.id}
-              className="bg-gradient-to-br from-amber-700 to-amber-900 rounded-xl shadow-lg overflow-hidden"
+              className="bg-linear-to-br from-amber-700 to-amber-900 rounded-xl shadow-lg overflow-hidden"
             >
               {/* Header with Avatar and Salary */}
               <div className="bg-amber-800/50 p-4 flex items-center justify-between">
@@ -166,7 +190,11 @@ export default function StaffPayroll() {
                   </span>
                 </div>
                 <div className="bg-green-500 text-white px-3 py-1 rounded-lg font-bold text-sm">
-                  ₱{employee.salary.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  ₱
+                  {employee.salary.toLocaleString("en-PH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </div>
               </div>
 
@@ -174,15 +202,21 @@ export default function StaffPayroll() {
               <div className="grid grid-cols-3 gap-0">
                 <div className="bg-amber-800 p-4 text-center border-r border-amber-700">
                   <p className="text-amber-200 text-xs mb-1">Present</p>
-                  <p className="text-white text-2xl font-bold">{employee.present}</p>
+                  <p className="text-white text-2xl font-bold">
+                    {employee.present}
+                  </p>
                 </div>
                 <div className="bg-amber-800 p-4 text-center border-r border-amber-700">
                   <p className="text-amber-200 text-xs mb-1">Absent</p>
-                  <p className="text-white text-2xl font-bold">{employee.absent}</p>
+                  <p className="text-white text-2xl font-bold">
+                    {employee.absent}
+                  </p>
                 </div>
                 <div className="bg-amber-800 p-4 text-center">
                   <p className="text-amber-200 text-xs mb-1">Late</p>
-                  <p className="text-white text-2xl font-bold">{employee.late}</p>
+                  <p className="text-white text-2xl font-bold">
+                    {employee.late}
+                  </p>
                 </div>
               </div>
             </div>

@@ -58,9 +58,9 @@ export default function FileLeave() {
   };
 
   const statusColors = {
-    Pending: "bg-yellow-200 text-yellow-800",
-    Approved: "bg-green-200 text-green-800",
-    Rejected: "bg-red-200 text-red-800",
+    Pending: "bg-yellow-100 text-yellow-500",
+    Approved: "bg-green-100 text-green-500",
+    Rejected: "bg-red-100 text-red-500",
   };
 
   return (
@@ -77,13 +77,13 @@ export default function FileLeave() {
           </h2>
 
           {/* Leave Type */}
-          <label className="block mb-1 font-semibold text-gray-700">
+          <label className="block mb-1 font-semibold text-white">
             Leave Type
           </label>
           <select
             value={form.leave_type}
             onChange={(e) => setForm({ ...form, leave_type: e.target.value })}
-            className="w-full mb-3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full mb-3 px-3 py-2 bg-[#a66a30] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
           >
             <option value="" disabled>
               Select Leave Type
@@ -98,7 +98,7 @@ export default function FileLeave() {
           {/* Start & End Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block mb-1 font-semibold text-gray-700">
+              <label className="block mb-1 font-semibold text-white">
                 Start Date
               </label>
               <input
@@ -107,43 +107,41 @@ export default function FileLeave() {
                 onChange={(e) =>
                   setForm({ ...form, start_date: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full px-3 py-2 bg-[#a66a30] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
             </div>
             <div>
-              <label className="block mb-1 font-semibold text-gray-700">
+              <label className="block mb-1 font-semibold text-white">
                 End Date
               </label>
               <input
                 type="date"
                 value={form.end_date}
                 onChange={(e) => setForm({ ...form, end_date: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full px-3 py-2 bg-[#a66a30] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
             </div>
           </div>
 
           {/* Reason */}
-          <label className="block mb-1 font-semibold text-gray-700">
-            Reason
-          </label>
+          <label className="block mb-1 font-semibold text-white">Reason</label>
           <textarea
-            placeholder="Reason for leave"
+            placeholder="Enter your reason here..."
             value={form.reason}
             onChange={(e) => setForm({ ...form, reason: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 mb-4 resize-none"
+            className="w-full px-3 py-2 bg-[#a66a30] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 mb-4 resize-none"
           />
 
           <button
             onClick={handleSubmit}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-md transition-colors"
+            className="w-full bg-[#4a2204] cursor-pointer text-white font-bold py-2 px-4 rounded-md transition-colors"
           >
             Submit Leave
           </button>
         </div>
 
         {/* Leave Requests List */}
-        <div className="p-3 bg-blue-100 w-full max-w-3xl rounded-lg">
+        <div className="p-5 bg-[#4a2204] w-full max-w-3xl rounded-lg">
           <div className="h-[70vh] overflow-y-auto">
             {loading ? (
               <p className="text-center text-gray-500">Loading...</p>
@@ -156,17 +154,17 @@ export default function FileLeave() {
                 {leaves.map((leave) => (
                   <div
                     key={leave.id}
-                    className="p-4 bg-white rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center"
+                    className="p-4 bg-[#a66a30] rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center"
                   >
                     <div className="mb-2 sm:mb-0">
-                      <p className="font-bold text-gray-800 text-lg">
+                      <p className="font-bold text-white text-lg">
                         {leave.leave_type}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-white">
                         {moment(leave.start_date).format("MMM DD, YYYY")} -{" "}
                         {moment(leave.end_date).format("MMM DD, YYYY")}
                       </p>
-                      <p className="text-gray-700 mt-1">{leave.reason}</p>
+                      <p className="text-white mt-1">Reason: {leave.reason}</p>
                     </div>
                     <span
                       className={`mt-2 sm:mt-0 px-3 py-1 rounded-full font-semibold ${
