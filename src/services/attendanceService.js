@@ -6,6 +6,11 @@ export const getAttendanceByUser = async (userId) => {
   return data;
 };
 
+export const getMonthlyAttendance = async (month) => {
+  const { data } = await axiosInstance.get(`/attendance-month/${month}`);
+  return data;
+};
+
 // Time in
 export const timeInRequest = async (payload) => {
   const { data } = await axiosInstance.post("/attendance", payload);

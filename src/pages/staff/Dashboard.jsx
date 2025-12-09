@@ -160,14 +160,14 @@ export default function Dashboard() {
 
         <div
           style={{ height: "80vh" }}
-          className="font-mono p-3 bg-white rounded-lg max-w-7xl"
+          className="font-mono p-3 bg-white rounded-lg"
         >
           <Calendar
             localizer={localizer}
             events={events}
             startAccessor="start"
             endAccessor="end"
-            views={["month", "agenda"]}
+            views={["month", "week", "agenda"]}
             components={{ event: ColoredTimeEvent }}
             eventPropGetter={eventStyleGetter}
           />
