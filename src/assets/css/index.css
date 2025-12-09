@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.jomhuria-regular {
+  font-family: "Jomhuria", serif;
+}

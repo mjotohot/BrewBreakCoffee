@@ -1,43 +1,37 @@
-// import { Outlet } from 'react-router'
-// import { useAuthStore } from '../stores/useAuthStore'
+import { Outlet, useNavigate } from "react-router";
+import { useAuthStore } from "../stores/useAuthStore";
+import bgImage from "../assets/images/bg-img.jpg";
 
-// const ProtectedRoute = () => {
-//   const { user, isLoading } = useAuthStore() // Access auth state from the store
+export default function ProtectedRoute() {
+  const { user, token } = useAuthStore();
+  const navigate = useNavigate();
 
-//   // Show loading spinner while checking auth status
-//   if (isLoading) {
-//     return (
-//       <div className="flex h-screen items-center justify-center bg-gray-100">
-//         <div className="flex flex-col items-center">
-//           <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin mb-4"></div>
-//           <p className="text-gray-700 text-lg font-medium">
-//             Checking your session...
-//           </p>
-//         </div>
-//       </div>
-//     )
-//   }
+  // Show Access Denied if user is not logged in
+  if (!user || !token) {
+    return (
+      <div
+        style={{
+          backgroundImage: `url(${bgImage})`,
+        }}
+        className="flex h-screen flex-col items-center justify-center bg-gray-100 text-center px-4 font-mono absolute inset-0 bg-cover bg-center"
+      >
+        <div className="absolute inset-0 bg-[#a66a30] opacity-40"></div>
+        <div className="relative z-10">
+          <h1 className="text-4xl font-bold mb-4 text-white">Access Denied</h1>
+          <p className="text-white text-lg mb-6">
+            You do not have permission to access this page. Please login to
+            continue.
+          </p>
+          <button
+            onClick={() => navigate("/login")}
+            className="bg-red-500 text-white py-2 px-6 rounded hover:bg-red-400 cursor-pointer"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-//   if (!user) {
-//     // User is not logged in / forbidden
-//     return (
-//       <div className="flex h-screen flex-col items-center justify-center bg-gray-100 text-center px-4">
-//         <h1 className="text-2xl font-bold mb-4 text-red-600">Access Denied</h1>
-//         <p className="text-gray-700 mb-6">
-//           You do not have permission to access this page. Please login to
-//           continue.
-//         </p>
-//         <button
-//           onClick={() => (window.location.href = '/login')}
-//           className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 cursor-pointer"
-//         >
-//           Go to Login
-//         </button>
-//       </div>
-//     )
-//   }
-
-//   return <Outlet />
-// }
-
-// export default ProtectedRoute
+  return <Outlet />;
+}

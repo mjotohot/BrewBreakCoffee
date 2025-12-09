@@ -1,50 +1,66 @@
-// import { redirectByRole } from '../utils/redirectByRole'
-// import { useNavigate } from 'react-router'
-// import { useAuthStore } from '../stores/useAuthStore'
-// import { useEffect, useState } from 'react'
+import { useNavigate } from "react-router";
+import { useAuthStore } from "../stores/useAuthStore";
+import bgImage from "../assets/images/bg-img.jpg";
+import { useEffect, useState } from "react";
 
-// const HomeRedirect = () => {
-//   const { user, isLoading } = useAuthStore()
-//   const navigate = useNavigate()
-//   const [loadingMessage, setLoadingMessage] = useState(
-//     'Checking your session...'
-//   )
+export default function HomeRedirect() {
+  const { user, token, role } = useAuthStore();
+  const navigate = useNavigate();
 
-//   // Update loading message dynamically
-//   useEffect(() => {
-//     if (isLoading) {
-//       setLoadingMessage('Checking your session...')
-//     } else if (!user) {
-//       setLoadingMessage('Redirecting to login...')
-//     } else if (user) {
-//       setLoadingMessage('Redirecting to your dashboard...')
-//     }
-//   }, [isLoading, user])
+  const [hydrated, setHydrated] = useState(useAuthStore.persist.hasHydrated());
+  const [showSpinner, setShowSpinner] = useState(true);
 
-//   // Redirects *after* render
-//   useEffect(() => {
-//     if (!isLoading) {
-//       if (!user) {
-//         navigate('/login')
-//       } else {
-//         redirectByRole(navigate)
-//       }
-//     }
-//   }, [isLoading, user, navigate])
+  // Wait for Zustand persist to finish hydrating
+  useEffect(() => {
+    const unsub = useAuthStore.persist.onFinishHydration(() => {
+      setHydrated(true);
+    });
+    return () => unsub();
+  }, []);
 
-//   // Show loading spinner and message while checking authentication status
-//   if (isLoading)
-//     return (
-//       <div className="flex h-screen items-center justify-center bg-gray-100">
-//         <div className="flex flex-col items-center">
-//           <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin mb-4"></div>
-//           <p className="text-gray-700 text-lg font-medium">{loadingMessage}</p>
-//         </div>
-//       </div>
-//     )
+  // Spinner shows for minimum duration
+  useEffect(() => {
+    if (hydrated) {
+      const timeout = setTimeout(() => setShowSpinner(false), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [hydrated]);
 
-//   // Render nothing while redirecting
-//   return null
-// }
+  // Redirect only when hydrated
+  useEffect(() => {
+    if (!hydrated) return;
 
-// export default HomeRedirect
+    if (!user || !token) {
+      navigate("/login", { replace: true });
+    } else if (role === "admin") {
+      navigate("/admin/dashboard", { replace: true });
+    } else {
+      navigate("/staff/dashboard", { replace: true });
+    }
+  }, [hydrated, user, token, role, navigate]);
+
+  const loadingMessage = (() => {
+    if (!hydrated) return "Loading session...";
+    if (!token || !user) return "Redirecting to login...";
+    return "Redirecting to your dashboard...";
+  })();
+
+  if (showSpinner) {
+    return (
+      <div
+        style={{
+          backgroundImage: `url(${bgImage})`,
+        }}
+        className="flex h-screen items-center justify-center absolute inset-0 bg-cover bg-center"
+      >
+        <div className="absolute inset-0 bg-[#a66a30] opacity-40"></div>
+        <div className="flex flex-col items-center animate-fade-in">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin mb-4"></div>
+          <p className="text-white text-4xl font-medium">{loadingMessage}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
