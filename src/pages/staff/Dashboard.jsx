@@ -1,5 +1,4 @@
-// Importing components and libraries
-import Cards from "../../components/commons/Cards"; // Reusable card component for displaying stats
+import Cards from "../../components/commons/Cards";
 import { FaCircleCheck } from "react-icons/fa6";
 import { FaTimesCircle } from "react-icons/fa";
 import { FaBusinessTime } from "react-icons/fa";

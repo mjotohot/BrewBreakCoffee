@@ -3,7 +3,6 @@ import axiosInstance from "../api/axios";
 // Fetch all attendance of a user
 export const getAttendanceByUser = async (userId) => {
   const { data } = await axiosInstance.get(`/attendance/${userId}`);
-  console.log(data);
   return data;
 };
 
@@ -24,5 +23,10 @@ export const timeOutRequest = async (attendanceId, payload) => {
     `/attendance/${attendanceId}`,
     payload
   );
+  return data;
+};
+
+export const getAttendanceToday = async (date) => {
+  const { data } = await axiosInstance.get(`/attendance-today/${date}`);
   return data;
 };

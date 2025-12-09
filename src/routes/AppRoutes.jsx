@@ -7,10 +7,12 @@ import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register.jsx";
 import Dashboard from "../pages/staff/Dashboard.jsx";
 import AdminDashboard from "../pages/admin/AdminDashboard.jsx";
-import Notification from "../components/commons/Notification.jsx";
+import StaffNotification from "../pages/staff/StaffNotification.jsx";
 import FileLeave from "../pages/staff/FileLeave.jsx";
 import Profile from "../pages/staff/Profile.jsx";
 import StaffPayroll from "../pages/admin/StaffPayroll.jsx";
+import StaffList from "../pages/admin/StaffList.jsx";
+import LeaveRequests from "../pages/admin/LeaveRequests.jsx";
 
 export default function AppRoutes() {
   return (
@@ -28,7 +30,7 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/staff" element={<MainLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="notification" element={<Notification />} />
+          <Route path="notification" element={<StaffNotification />} />
           <Route path="leave-request" element={<FileLeave />} />
           <Route path="profile" element={<Profile />} />
         </Route>
@@ -38,7 +40,9 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/admin" element={<MainLayout />}>
           <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="staff-payroll" element={<StaffPayroll />} />
+          <Route path="payroll" element={<StaffPayroll />} />
+          <Route path="staffs" element={<StaffList />} />
+          <Route path="requests" element={<LeaveRequests />} />
         </Route>
       </Route>
     </Routes>

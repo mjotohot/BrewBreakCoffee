@@ -1,7 +1,11 @@
-// Profile.jsx
 import { useState, useEffect, useMemo } from "react";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { getAttendanceByUser } from "../../services/attendanceService";
+import {
+  calculateAttendanceStats,
+  DAILY_RATE,
+  LATE_PENALTY_PER_HOUR,
+} from "../../utils/salaryCounter";
 import moment from "moment";
 import { toast } from "react-hot-toast";
 
@@ -15,10 +19,6 @@ export default function Profile() {
     moment().format("YYYY-MM")
   );
   const [dateStarted, setDateStarted] = useState(null);
-
-  const DAILY_RATE = 435;
-  const LATE_PENALTY_PER_HOUR = 54;
-  const STANDARD_CHECKIN = "08:00:00";
 
   // Generate list of months from earliest attendance to current month
   const getMonthOptions = () => {
@@ -84,97 +84,9 @@ export default function Profile() {
     fetchAttendance();
   }, [userId]);
 
-  // Calculate stats whenever attendance or selectedMonth changes
   const stats = useMemo(() => {
-    if (attendance.length === 0) {
-      return {
-        present: 0,
-        absent: 0,
-        lateHours: 0,
-        hoursWorked: 0,
-        netSalary: 0,
-      };
-    }
-
-    // Filter records for selected month
-    const monthRecords = attendance.filter(
-      (r) => moment(r.date).format("YYYY-MM") === selectedMonth
-    );
-
-    // Days present for selected month
-    const present = monthRecords.filter((r) => r.check_in).length;
-
-    // Days absent for selected month
-    const daysInMonth = moment(selectedMonth, "YYYY-MM").daysInMonth();
-    let absent = 0;
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = moment(`${selectedMonth}-${day}`, "YYYY-MM-DD").format(
-        "YYYY-MM-DD"
-      );
-      const dateObj = moment(dateStr);
-
-      // Skip future dates
-      if (dateObj.isAfter(moment(), "day")) continue;
-
-      // Skip dates before employee started (if we have dateStarted)
-      if (dateStarted && dateObj.isBefore(moment(dateStarted), "day")) continue;
-
-      // Count as absent if no record exists
-      if (!monthRecords.some((r) => r.date === dateStr)) absent++;
-    }
-
-    // Total hours worked for selected month
-    let hoursWorked = 0;
-    monthRecords.forEach((r) => {
-      if (!r.check_in || !r.check_out) return;
-      const start = moment(`${r.date} ${r.check_in}`);
-      const end = moment(`${r.date} ${r.check_out}`);
-      hoursWorked += Math.floor(end.diff(start, "hours", true));
-    });
-
-    // Calculate late hours for selected month
-    const lateHours = monthRecords.reduce((sum, r) => {
-      if (!r.check_in) return sum;
-
-      const standardTime = moment(
-        `${r.date} ${STANDARD_CHECKIN}`,
-        "YYYY-MM-DD HH:mm:ss"
-      );
-      const checkInTime = moment(
-        `${r.date} ${r.check_in}`,
-        "YYYY-MM-DD HH:mm:ss"
-      );
-
-      if (checkInTime.isAfter(standardTime)) {
-        const diffHours = Math.floor(
-          checkInTime.diff(standardTime, "hours", true)
-        );
-        return sum + diffHours;
-      }
-      return sum;
-    }, 0);
-
-    // Calculate net salary
-    const grossSalary = present * DAILY_RATE;
-    const lateDeduction = lateHours * LATE_PENALTY_PER_HOUR;
-    const netSalary = Math.max(grossSalary - lateDeduction, 0);
-
-    return {
-      present,
-      absent,
-      lateHours,
-      hoursWorked,
-      netSalary: Number(netSalary.toFixed(2)),
-      lateDeduction: Number(lateDeduction.toFixed(2)),
-    };
-  }, [
-    attendance,
-    selectedMonth,
-    dateStarted,
-    DAILY_RATE,
-    LATE_PENALTY_PER_HOUR,
-    STANDARD_CHECKIN,
-  ]);
+    return calculateAttendanceStats(attendance, selectedMonth, dateStarted);
+  }, [attendance, selectedMonth, dateStarted]);
 
   return (
     <div className="font-mono">
@@ -189,7 +101,7 @@ export default function Profile() {
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="px-4 py-2 border rounded-lg bg-[#d6ba73] shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="px-4 py-2 border rounded-lg bg-[#d6ba73] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#d6ba73]"
           >
             {getMonthOptions().map((month) => (
               <option key={month.value} value={month.value}>

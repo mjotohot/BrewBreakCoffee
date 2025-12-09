@@ -14,6 +14,9 @@ export default function HeaderWrapper() {
     "/staff-payroll": "Staff Payroll",
     "/file-leave": "File Leave",
     "/staff/profile": "Profile",
+    "/admin/payroll": "Staff Payroll",
+    "/admin/staffs": "Staffs",
+    "/admin/requests": "Leave Requests",
   };
 
   const title = routeTitles[location.pathname] || "Untitled";

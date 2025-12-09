@@ -64,7 +64,7 @@ export default function FileLeave() {
   };
 
   return (
-    <div className="p-6 font-mono">
+    <div className="font-mono">
       <h1 className="w-full text-white font-extrabold text-xl text-center mb-5 border-b border-white pb-2">
         Submit and Manage your Leave Requests
       </h1>
@@ -146,7 +146,7 @@ export default function FileLeave() {
             {loading ? (
               <p className="text-center text-gray-500">Loading...</p>
             ) : leaves.length === 0 ? (
-              <p className="text-center text-gray-500">
+              <p className="text-center text-gray-500 italic">
                 No leave requests yet.
               </p>
             ) : (

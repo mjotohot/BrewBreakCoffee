@@ -4,6 +4,7 @@ import { useNavigate, useLocation, NavLink } from "react-router";
 import { FiMenu, FiX } from "react-icons/fi";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { staffNavItems, adminNavItems } from "../../lib/sidebarNavItems";
+import { getInitials } from "../../utils/getInitials";
 import Modal from "../commons/Modal";
 
 export default function Sidebar() {
@@ -108,14 +109,9 @@ export default function Sidebar() {
         </nav>
         <div className="p-4 border-t border-gray-300">
           <div className="flex items-center space-x-3 mb-4">
-            <img
-              className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center"
-              src={
-                user?.avatar_url ||
-                "https://img.daisyui.com/images/profile/demo/4@94.webp"
-              }
-              alt="user"
-            />
+            <span className="w-10 h-10 bg-[#4a2204] text-white rounded-full flex items-center justify-center">
+              {getInitials(user.name)}
+            </span>
             <div>
               <p className="text-sm font-bold">{user.name || "No name"}</p>
               <p className="text-xs text-gray-700">
