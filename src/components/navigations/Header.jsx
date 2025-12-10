@@ -21,18 +21,50 @@ export default function HeaderWrapper() {
 
   const title = routeTitles[location.pathname] || "Untitled";
 
-  const weatherColors = {
-    Clear: "text-yellow-400",
-    Clouds: "text-gray-300",
-    Rain: "text-blue-400",
-    Drizzle: "text-blue-300",
-    Thunderstorm: "text-purple-400",
-    Snow: "text-white",
-    Mist: "text-gray-200",
+  // WMO Weather Code mapping (Open-Meteo uses WMO codes)
+  const getWeatherInfo = (code) => {
+    const weatherMap = {
+      0: { main: "Clear", description: "Clear sky", icon: "☀️", color: "text-yellow-400" },
+      1: { main: "Clear", description: "Mainly clear", icon: "🌤️", color: "text-yellow-300" },
+      2: { main: "Clouds", description: "Partly cloudy", icon: "⛅", color: "text-gray-300" },
+      3: { main: "Clouds", description: "Overcast", icon: "☁️", color: "text-gray-300" },
+      45: { main: "Mist", description: "Foggy", icon: "🌫️", color: "text-gray-200" },
+      48: { main: "Mist", description: "Depositing rime fog", icon: "🌫️", color: "text-gray-200" },
+      51: { main: "Drizzle", description: "Light drizzle", icon: "🌦️", color: "text-blue-300" },
+      53: { main: "Drizzle", description: "Moderate drizzle", icon: "🌦️", color: "text-blue-300" },
+      55: { main: "Drizzle", description: "Dense drizzle", icon: "🌧️", color: "text-blue-300" },
+      61: { main: "Rain", description: "Slight rain", icon: "🌧️", color: "text-blue-400" },
+      63: { main: "Rain", description: "Moderate rain", icon: "🌧️", color: "text-blue-400" },
+      65: { main: "Rain", description: "Heavy rain", icon: "🌧️", color: "text-blue-500" },
+      71: { main: "Snow", description: "Slight snow", icon: "🌨️", color: "text-white" },
+      73: { main: "Snow", description: "Moderate snow", icon: "❄️", color: "text-white" },
+      75: { main: "Snow", description: "Heavy snow", icon: "❄️", color: "text-white" },
+      77: { main: "Snow", description: "Snow grains", icon: "🌨️", color: "text-white" },
+      80: { main: "Rain", description: "Slight rain showers", icon: "🌦️", color: "text-blue-400" },
+      81: { main: "Rain", description: "Moderate rain showers", icon: "🌧️", color: "text-blue-400" },
+      82: { main: "Rain", description: "Violent rain showers", icon: "⛈️", color: "text-blue-500" },
+      85: { main: "Snow", description: "Slight snow showers", icon: "🌨️", color: "text-white" },
+      86: { main: "Snow", description: "Heavy snow showers", icon: "❄️", color: "text-white" },
+      95: { main: "Thunderstorm", description: "Thunderstorm", icon: "⛈️", color: "text-purple-400" },
+      96: { main: "Thunderstorm", description: "Thunderstorm with hail", icon: "⛈️", color: "text-purple-400" },
+      99: { main: "Thunderstorm", description: "Thunderstorm with heavy hail", icon: "⛈️", color: "text-purple-500" },
+    };
+
+    return weatherMap[code] || { 
+      main: "Unknown", 
+      description: "Unknown conditions", 
+      icon: "🌡️", 
+      color: "text-white" 
+    };
   };
 
-  const weatherMain = weatherData?.weather[0]?.main || "";
-  const weatherClass = weatherColors[weatherMain] || "text-white";
+  const weatherCode = weatherData?.current?.weatherCode;
+  const weatherInfo = weatherCode !== undefined ? getWeatherInfo(weatherCode) : null;
+
+  // Convert Celsius to Fahrenheit
+  const celsiusToFahrenheit = (celsius) => {
+    return ((celsius * 9/5) + 32).toFixed(1);
+  };
 
   return (
     <header
@@ -43,24 +75,21 @@ export default function HeaderWrapper() {
       <div className="flex items-center gap-3 text-lg">
         {loading && <span className="text-yellow-300 animate-pulse">...</span>}
         {error && <span className="text-red-400">Error: {error}</span>}
-        {weatherData && (
+        {weatherData && weatherInfo && (
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-white">Today's Weather:</span>
             <span className="font-semibold text-green-300">
-              {weatherData.name}
+              {weatherData.location.name}
             </span>
             <span className="font-bold text-orange-700">
-              {weatherData.main.temp}°F
+              {celsiusToFahrenheit(weatherData.current.temperature)}°F
             </span>
-            <span className={`font-semibold ${weatherClass}`}>
-              {weatherData.weather[0].main} (
-              {weatherData.weather[0].description})
+            <span className={`font-semibold ${weatherInfo.color}`}>
+              {weatherInfo.main} ({weatherInfo.description})
             </span>
-            <img
-              className="w-10 h-10"
-              src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`}
-              alt={weatherData.weather[0].description}
-            />
+            <span className="text-3xl" role="img" aria-label={weatherInfo.description}>
+              {weatherInfo.icon}
+            </span>
           </div>
         )}
       </div>

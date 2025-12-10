@@ -43,7 +43,7 @@ export default function Sidebar() {
           <button onClick={toggleSidebar} className="p-2 rounded-md">
             {isSidebarOpen ? <FiX size={20} /> : <FiMenu size={20} />}
           </button>
-          <div className="text-xl font-bold">Retinalyze.ai</div>
+          <div className="text-xl font-bold">BrewBreakCoffee</div>
           <img
             src="/logo.jpg"
             alt="logo"

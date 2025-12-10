@@ -9,16 +9,21 @@ export function getDaysPresent(records) {
 }
 
 // Count days absent (current month)
+// Count days absent (current month)
 export function getDaysAbsent(records) {
   const month = moment().format("YYYY-MM");
   const daysInMonth = moment(month, "YYYY-MM").daysInMonth();
+  const today = moment().startOf('day');
 
   let absent = 0;
   for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = moment(`${month}-${day}`, "YYYY-MM-DD").format(
-      "YYYY-MM-DD"
-    );
-    if (moment(dateStr).isAfter(moment(), "day")) continue;
+    const dateStr = moment(`${month}-${day}`, "YYYY-MM-DD").format("YYYY-MM-DD");
+    const checkDate = moment(dateStr).startOf('day');
+    
+    // Skip only future dates (not today)
+    if (checkDate.isAfter(today, "day")) continue;
+    
+    // Check if there's no record for this date
     if (!records.some((r) => r.date === dateStr)) absent++;
   }
   return absent;
