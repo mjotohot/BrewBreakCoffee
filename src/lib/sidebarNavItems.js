@@ -48,4 +48,9 @@ export const adminNavItems = [
     path: "/admin/payroll",
     icon: FaUser,
   },
+    {
+    label: "Notification",
+    path: "/admin/notification",
+    icon: IoNotificationsSharp,
+  },
 ];

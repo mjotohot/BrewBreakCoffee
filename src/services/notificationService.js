@@ -5,6 +5,12 @@ export const getNotifications = async (userId) => {
   return res.data;
 };
 
+export const getAllNotifications = async () => {
+  const res = await axiosInstance.get(`/notification`);
+  return res.data;
+};
+
+
 export const createNotification = async (payload) => {
   const res = await axiosInstance.post(`/notification`, payload);
   return res.data;

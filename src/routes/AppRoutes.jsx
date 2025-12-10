@@ -13,6 +13,7 @@ import Profile from "../pages/staff/Profile.jsx";
 import StaffPayroll from "../pages/admin/StaffPayroll.jsx";
 import StaffList from "../pages/admin/StaffList.jsx";
 import LeaveRequests from "../pages/admin/LeaveRequests.jsx";
+import AdminNotification from "../pages/admin/AdminNotification.jsx";
 
 export default function AppRoutes() {
   return (
@@ -43,6 +44,7 @@ export default function AppRoutes() {
           <Route path="payroll" element={<StaffPayroll />} />
           <Route path="staffs" element={<StaffList />} />
           <Route path="requests" element={<LeaveRequests />} />
+          <Route path="notification" element={<AdminNotification />} />
         </Route>
       </Route>
     </Routes>

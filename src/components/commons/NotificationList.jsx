@@ -33,7 +33,7 @@ export default function NotificationList({ notifications = [], loading }) {
             <div className="flex items-center gap-3">
               {getIcon(c.notification_type, c.status)}
               <span className="text-lg font-extrabold font-mono text-[#4a2204]">
-                {c.text || `${c.notification_type} ${c.status}`}
+              {c.user.name}  {c.text || `${c.notification_type} ${c.status}`}
               </span>
             </div>
             <p>{moment(c.created_at).fromNow()}</p>
